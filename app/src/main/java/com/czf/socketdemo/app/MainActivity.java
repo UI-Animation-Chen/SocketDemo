@@ -16,16 +16,17 @@ import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tv;
+    private SketchView sketchView;
     private String line;
     private Handler uiHander;
+    private final String serverIP = "192.168.89.108";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tv = (TextView) findViewById(com.czf.socketdemo.app.R.id.tv_app);
+        sketchView = (SketchView) findViewById(R.id.sketch_view);
         uiHander = new Handler();
 
         crateSocket();
@@ -36,14 +37,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    Socket socket = new Socket(InetAddress.getLocalHost(), 7777);
+                    Socket socket = new Socket(InetAddress.getByName(serverIP), 7777);
                     BufferedReader br =
                             new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while (!(line = br.readLine()).equals("bye")) { // readLine might block
                         uiHander.post(new Runnable() {
                             @Override
                             public void run() {
-                                tv.setText(line);
+                                String[] strs = line.split("_");
+                                sketchView.moveToPoint(Float.parseFloat(strs[0]),
+                                                       Float.parseFloat(strs[1]));
                             }
                         });
                     }
