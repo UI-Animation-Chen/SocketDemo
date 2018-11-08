@@ -1,14 +1,9 @@
 package com.czf.socketdemo.server;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.widget.TextView;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -16,8 +11,6 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +22,15 @@ public class MainActivity extends AppCompatActivity {
         startServer();
     }
 
+    /**
+     * A server socket listens on a single port. All established client connections on that server
+     * are associated with that same listening port on the server side of the connection.
+     * An established connection is uniquely identified by the combination of client-side and
+     * server-side IP/Port pairs. Multiple connections on the same server can share the same
+     * server-side IP/Port pair as long as they are associated with different client-side
+     * IP/Port pairs, and the server would be able to handle as many clients as available system
+     * resources allow it to.
+     */
     private void startServer() {
         new Thread(new Runnable() {
             @Override

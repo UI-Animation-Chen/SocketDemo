@@ -3,7 +3,6 @@ package com.czf.socketdemo.app;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -13,9 +12,6 @@ import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView socketTv1;
-    private TextView socketTv2;
-    private TextView socketTv3;
     private Handler uiHander;
     private final String serverIP = "10.200.0.60";
 
@@ -26,21 +22,27 @@ public class MainActivity extends AppCompatActivity {
 
         uiHander = new Handler();
 
-        socketTv1 = findViewById(R.id.socket1);
-        socketTv2 = findViewById(R.id.socket2);
-        socketTv3 = findViewById(R.id.socket3);
+        TextView socketTv1 = findViewById(R.id.socket1);
+        TextView socketTv2 = findViewById(R.id.socket2);
+        TextView socketTv3 = findViewById(R.id.socket3);
 
-        crateSocket(socketTv1);
-        crateSocket(socketTv2);
-        crateSocket(socketTv3);
+        crateSocket(socketTv1, 55555);
+        crateSocket(socketTv2, 55556);
+        crateSocket(socketTv3, 55557);
     }
 
-    private void crateSocket(final TextView socketTv) {
+    /**
+     * On the client-side, it is common practice for new outbound connections to use a random
+     * client-side port, in which case it is possible to run out of available ports if you make
+     * a lot of connections in a short amount of time.
+     */
+    private void crateSocket(final TextView socketTv, final int localPort) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Socket socket = new Socket(InetAddress.getByName(serverIP), 7777);
+                    Socket socket = new Socket(InetAddress.getByName(serverIP), 7777, // dest
+                                               InetAddress.getByName(serverIP), localPort); // local
                     BufferedReader br =
                             new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while (true) {
