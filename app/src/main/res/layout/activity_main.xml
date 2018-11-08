@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.czf.socketdemo.app.SketchView
-        android:id="@+id/sketch_view"
+    <TextView
+        android:id="@+id/socket1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="socket1"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/socket2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="socket2"/>
+
+    <TextView
+        android:id="@+id/socket3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="socket3"/>
+
+</LinearLayout>

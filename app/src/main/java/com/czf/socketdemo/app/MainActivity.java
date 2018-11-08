@@ -7,32 +7,35 @@ import android.util.Log;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SketchView sketchView;
-    private String line;
+    private TextView socketTv1;
+    private TextView socketTv2;
+    private TextView socketTv3;
     private Handler uiHander;
-    private final String serverIP = "192.168.89.108";
+    private final String serverIP = "10.200.0.60";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sketchView = (SketchView) findViewById(R.id.sketch_view);
         uiHander = new Handler();
 
-        crateSocket();
+        socketTv1 = findViewById(R.id.socket1);
+        socketTv2 = findViewById(R.id.socket2);
+        socketTv3 = findViewById(R.id.socket3);
+
+        crateSocket(socketTv1);
+        crateSocket(socketTv2);
+        crateSocket(socketTv3);
     }
 
-    private void crateSocket() {
+    private void crateSocket(final TextView socketTv) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -40,13 +43,12 @@ public class MainActivity extends AppCompatActivity {
                     Socket socket = new Socket(InetAddress.getByName(serverIP), 7777);
                     BufferedReader br =
                             new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    while (!(line = br.readLine()).equals("bye")) { // readLine might block
+                    while (true) {
+                        final String recvStr = br.readLine(); // readLine might block
                         uiHander.post(new Runnable() {
                             @Override
                             public void run() {
-                                String[] strs = line.split("_");
-                                sketchView.moveToPoint(Float.parseFloat(strs[0]),
-                                                       Float.parseFloat(strs[1]));
+                                socketTv.setText(recvStr);
                             }
                         });
                     }
