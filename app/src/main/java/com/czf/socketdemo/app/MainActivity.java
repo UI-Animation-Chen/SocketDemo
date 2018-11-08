@@ -12,15 +12,15 @@ import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Handler uiHander;
-    private final String serverIP = "10.200.0.60";
+    private Handler uiHandler;
+    private final String serverIP = "10.0.2.2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        uiHander = new Handler();
+        uiHandler = new Handler();
 
         TextView socketTv1 = findViewById(R.id.socket1);
         TextView socketTv2 = findViewById(R.id.socket2);
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                             new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     while (true) {
                         final String recvStr = br.readLine(); // readLine might block
-                        uiHander.post(new Runnable() {
+                        uiHandler.post(new Runnable() {
                             @Override
                             public void run() {
                                 socketTv.setText(recvStr);
