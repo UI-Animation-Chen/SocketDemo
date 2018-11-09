@@ -13,9 +13,9 @@ import java.net.Socket;
 public class MainActivity extends AppCompatActivity {
 
     private Handler uiHandler;
-    private final String serverIP = "localhost"; // emulator
+    private final String serverIP = "localhost"; // emulator loopback. 127.0.0.1 or 10.0.2.15.
 //    private final String serverIP = "android device ip"; // real android device
-//    private final String serverIP = "10.0.2.2"; // real development machine
+//    private final String serverIP = "10.0.2.2"; // development machine
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
