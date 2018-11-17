@@ -1,16 +1,16 @@
 package com.czf.socketdemo.server;
 
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,15 +53,17 @@ public class MainActivity extends AppCompatActivity {
     private void startTCPConn(Socket clientSocket) {
         try {
             final String sokectName = clientSocket.toString();
+            final BufferedReader br =
+                    new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             final BufferedWriter bw =
                     new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {
-                        SystemClock.sleep(1000);
                         try {
-                            bw.write(sokectName + new Random().nextInt());
+                            String recv = br.readLine();
+                            bw.write(sokectName + recv);
                             bw.newLine();
                             bw.flush();
                         } catch(IOException e) {
