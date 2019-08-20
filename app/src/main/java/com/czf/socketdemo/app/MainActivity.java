@@ -1,14 +1,18 @@
 package com.czf.socketdemo.app;
 
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,7 +51,12 @@ public class MainActivity extends AppCompatActivity {
                                                InetAddress.getByName(serverIP), localPort); // local
                     BufferedReader br =
                             new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    BufferedWriter bw =
+                            new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     while (true) {
+                        bw.write("" + new Random().nextInt());
+                        bw.newLine();
+                        bw.flush();
                         final String recvStr = br.readLine(); // readLine might block
                         uiHandler.post(new Runnable() {
                             @Override
@@ -55,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                                 socketTv.setText(recvStr);
                             }
                         });
+                        SystemClock.sleep(2000);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
