@@ -63,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                     while (true) {
                         try {
                             String recv = br.readLine();
+                            if (recv == null) { // closed.
+                                return;
+                            }
                             bw.write(sokectName + recv);
                             bw.newLine();
                             bw.flush();

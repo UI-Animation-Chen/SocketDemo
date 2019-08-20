@@ -17,14 +17,19 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private Handler uiHandler;
-    private final String serverIP = "localhost"; // emulator loopback. 127.0.0.1 or 10.0.2.15.
+//    private final String serverIP = "localhost"; // emulator loopback. 127.0.0.1 or 10.0.2.15.
 //    private final String serverIP = "android device ip"; // real android device
 //    private final String serverIP = "10.0.2.2"; // development machine
+    private final String serverIP = "192.168.8.141";
+
+    private boolean exit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        exit = false;
 
         uiHandler = new Handler();
 
@@ -48,12 +53,15 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     Socket socket = new Socket(InetAddress.getByName(serverIP), 7777, // dest
-                                               InetAddress.getByName(serverIP), localPort); // local
+                                               null, localPort); // local
                     BufferedReader br =
                             new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     BufferedWriter bw =
                             new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     while (true) {
+                        if (exit) {
+                            socket.close();
+                        }
                         bw.write("" + new Random().nextInt());
                         bw.newLine();
                         bw.flush();
@@ -73,4 +81,9 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        exit = true;
+    }
 }
