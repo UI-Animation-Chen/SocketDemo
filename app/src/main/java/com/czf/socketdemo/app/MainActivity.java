@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     Socket socket = new Socket(InetAddress.getByName(serverIP), 7777, // dest
-                                               null, localPort); // local
+                                               null, 0); // local
                     BufferedReader br =
                             new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     BufferedWriter bw =
