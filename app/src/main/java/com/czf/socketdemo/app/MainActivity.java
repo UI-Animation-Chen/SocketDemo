@@ -20,7 +20,8 @@ public class MainActivity extends AppCompatActivity {
 //    private final String serverIP = "localhost"; // emulator loopback. 127.0.0.1 or 10.0.2.15.
 //    private final String serverIP = "android device ip"; // real android device
 //    private final String serverIP = "10.0.2.2"; // development machine
-    private final String serverIP = "192.168.8.141";
+    private final String serverIP = "192.168.4.144";
+    private int serverPort = 9999;
 
     private boolean exit = false;
 
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    Socket socket = new Socket(InetAddress.getByName(serverIP), 7777, // dest
+                    Socket socket = new Socket(InetAddress.getByName(serverIP), serverPort, // dest
                                                null, 0); // local
                     BufferedReader br =
                             new BufferedReader(new InputStreamReader(socket.getInputStream()));
