@@ -4,12 +4,15 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Random;
@@ -38,9 +41,42 @@ public class MainActivity extends AppCompatActivity {
         TextView socketTv2 = findViewById(R.id.socket2);
         TextView socketTv3 = findViewById(R.id.socket3);
 
-        crateSocket(socketTv1, 55555);
-        crateSocket(socketTv2, 55556);
-        crateSocket(socketTv3, 55557);
+        //crateSocket(socketTv1, 55555);
+        //crateSocket(socketTv2, 55556);
+        //crateSocket(socketTv3, 55557);
+        sendDatagramPacket(socketTv1);
+    }
+
+    private void sendDatagramPacket(final TextView tv) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DatagramSocket udpSocket = new DatagramSocket();
+                    udpSocket.connect(InetAddress.getByName(serverIP), serverPort);
+                    byte[] buf = new byte[1500];
+                    for (;;) {
+                        buf[0] = 77;
+                        buf[1] = 2;
+                        final DatagramPacket p = new DatagramPacket(buf, 1500);
+                        udpSocket.send(p);
+                        Log.d("----------", "packet sended");
+                        buf[0] = -1;
+                        udpSocket.receive(p);
+                        Log.d("----------", "packet recved: " + p.getData()[0]);
+                        uiHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                tv.setText("" + p.getData()[0]);
+                            }
+                        });
+                        SystemClock.sleep(2000);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     /**
