@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
 //    private final String serverIP = "localhost"; // emulator loopback. 127.0.0.1 or 10.0.2.15.
 //    private final String serverIP = "android device ip"; // real android device
 //    private final String serverIP = "10.0.2.2"; // development machine
-    private final String serverIP = "192.168.4.144";
-    private int serverPort = 9999;
+    private final String serverIP = "192.168.8.141";
+    private int serverPort = 12345;
 
     private boolean exit = false;
 
@@ -41,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
         TextView socketTv2 = findViewById(R.id.socket2);
         TextView socketTv3 = findViewById(R.id.socket3);
 
-        //crateSocket(socketTv1, 55555);
-        //crateSocket(socketTv2, 55556);
-        //crateSocket(socketTv3, 55557);
-        sendDatagramPacket(socketTv1);
+        crateSocket(socketTv1, 55555);
+        crateSocket(socketTv2, 55556);
+        crateSocket(socketTv3, 55557);
+//        sendDatagramPacket(socketTv1);
     }
 
     private void sendDatagramPacket(final TextView tv) {
@@ -58,16 +58,18 @@ public class MainActivity extends AppCompatActivity {
                     for (;;) {
                         buf[0] = 77;
                         buf[1] = 2;
-                        final DatagramPacket p = new DatagramPacket(buf, 1500);
+                        final DatagramPacket p = new DatagramPacket(buf, 2);
+                        Log.d("-------", "send ip: " + p.getAddress() + ", port: " + p.getPort());
                         udpSocket.send(p);
-                        Log.d("----------", "packet sended");
+                        Log.d("-------", "sended ip: " + p.getAddress() + ", port: " + p.getPort());
+
                         buf[0] = -1;
                         udpSocket.receive(p);
-                        Log.d("----------", "packet recved: " + p.getData()[0]);
+                        Log.d("-------", "recv ip: " + p.getAddress().getHostAddress() + ", port: " + p.getPort());
                         uiHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                tv.setText("" + p.getData()[0]);
+                                tv.setText("" + p.getData()[0] + ", len: " + p.getLength());
                             }
                         });
                         SystemClock.sleep(2000);
