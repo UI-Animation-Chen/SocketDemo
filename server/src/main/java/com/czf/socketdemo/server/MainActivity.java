@@ -14,6 +14,8 @@ import java.net.Socket;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final int serverPort = 12345;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    ServerSocket serverSocket = new ServerSocket(7777);
+                    ServerSocket serverSocket = new ServerSocket(serverPort);
                     for(;;) {
                         Log.d("---------", "server is ready");
                         Socket clientSocket = serverSocket.accept();
