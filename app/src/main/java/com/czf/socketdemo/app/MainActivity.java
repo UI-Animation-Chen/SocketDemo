@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
 //    private final String serverIP = "localhost"; // emulator loopback. 127.0.0.1 or 10.0.2.15.
 //    private final String serverIP = "android device ip"; // real android device
 //    private final String serverIP = "10.0.2.2"; // development machine
-//    private final String serverIP = "192.168.8.141";
-    private String serverIP = "10.200.0.45";
+    private final String serverIP = "192.168.8.146";
+//    private String serverIP = "10.200.0.45";
     private int serverPort = 12345;
 
     private boolean exit = false;
@@ -42,10 +42,10 @@ public class MainActivity extends AppCompatActivity {
         TextView socketTv2 = findViewById(R.id.socket2);
         TextView socketTv3 = findViewById(R.id.socket3);
 
-        crateSocket(socketTv1, 55555);
-        crateSocket(socketTv2, 55556);
-        crateSocket(socketTv3, 55557);
-//        sendDatagramPacket(socketTv1);
+//        crateSocket(socketTv1, 55555);
+//        crateSocket(socketTv2, 55556);
+//        crateSocket(socketTv3, 55557);
+        sendDatagramPacket(socketTv1);
     }
 
     private void sendDatagramPacket(final TextView tv) {
@@ -54,26 +54,21 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     DatagramSocket udpSocket = new DatagramSocket();
-                    udpSocket.connect(InetAddress.getByName(serverIP), serverPort);
                     byte[] buf = new byte[1500];
+                    buf[0] = 77;
                     for (;;) {
-                        buf[0] = 77;
-                        buf[1] = 2;
-                        final DatagramPacket p = new DatagramPacket(buf, 2);
-                        Log.d("-------", "send ip: " + p.getAddress() + ", port: " + p.getPort());
+                        final DatagramPacket p = new DatagramPacket(buf, 1, InetAddress.getByName(serverIP), serverPort);
                         udpSocket.send(p);
-                        Log.d("-------", "sended ip: " + p.getAddress() + ", port: " + p.getPort());
 
                         buf[0] = -1;
                         udpSocket.receive(p);
-                        Log.d("-------", "recv ip: " + p.getAddress().getHostAddress() + ", port: " + p.getPort());
                         uiHandler.post(new Runnable() {
                             @Override
                             public void run() {
                                 tv.setText("" + p.getData()[0] + ", len: " + p.getLength());
                             }
                         });
-                        SystemClock.sleep(2000);
+                        SystemClock.sleep(1000);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

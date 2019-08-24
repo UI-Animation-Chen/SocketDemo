@@ -9,6 +9,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -21,7 +23,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(com.czf.socketdemo.server.R.layout.activity_main);
 
-        startServer();
+//        startTcpServer();
+        startUdpServer();
+    }
+
+    private void startUdpServer() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    DatagramSocket udpServer = new DatagramSocket(serverPort);
+                    System.out.println("----- udp server is ready");
+                    byte[] buf = new byte[1500];
+                    for (;;) {
+                        DatagramPacket p = new DatagramPacket(buf, buf.length);
+                        udpServer.receive(p);
+                        System.out.println("reveived a packet");
+
+                        buf[0]++;
+                        p = new DatagramPacket(buf, p.getLength(), p.getAddress(), p.getPort());
+                        udpServer.send(p);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     /**
@@ -33,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
      * IP/Port pairs, and the server would be able to handle as many clients as available system
      * resources allow it to.
      */
-    private void startServer() {
+    private void startTcpServer() {
         new Thread(new Runnable() {
             @Override
             public void run() {
