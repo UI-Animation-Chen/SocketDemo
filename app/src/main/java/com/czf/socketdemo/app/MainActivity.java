@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 //    private final String serverIP = "localhost"; // emulator loopback. 127.0.0.1 or 10.0.2.15.
 //    private final String serverIP = "android device ip"; // real android device
 //    private final String serverIP = "10.0.2.2"; // development machine
-    private final String serverIP = "192.168.8.146";
+    private final String serverIP = "192.168.8.141";
 //    private String serverIP = "10.200.0.45";
     private int serverPort = 12345;
 
@@ -57,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
                     byte[] buf = new byte[1500];
                     buf[0] = 77;
                     for (;;) {
-                        final DatagramPacket p = new DatagramPacket(buf, 1, InetAddress.getByName(serverIP), serverPort);
+                        final DatagramPacket p =
+                          new DatagramPacket(buf, 1, InetAddress.getByName(serverIP), serverPort);
                         udpSocket.send(p);
 
                         buf[0] = -1;

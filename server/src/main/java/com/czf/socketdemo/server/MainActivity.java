@@ -3,6 +3,7 @@ package com.czf.socketdemo.server;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,10 +19,14 @@ public class MainActivity extends AppCompatActivity {
 
     private final int serverPort = 12345;
 
+    private TextView tv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(com.czf.socketdemo.server.R.layout.activity_main);
+
+        tv = findViewById(R.id.tv_server);
 
 //        startTcpServer();
         startUdpServer();
@@ -36,13 +41,22 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("----- udp server is ready");
                     byte[] buf = new byte[1500];
                     for (;;) {
-                        DatagramPacket p = new DatagramPacket(buf, buf.length);
+                        final DatagramPacket p = new DatagramPacket(buf, buf.length);
                         udpServer.receive(p);
                         System.out.println("reveived a packet");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String msg = "client: " + p.getAddress().getHostAddress()
+                                             + ":" + p.getPort() + ", data: " + p.getData()[0]
+                                             + " - " + System.currentTimeMillis();
+                                tv.setText(msg);
+                            }
+                        });
 
                         buf[0]++;
-                        p = new DatagramPacket(buf, p.getLength(), p.getAddress(), p.getPort());
-                        udpServer.send(p);
+                        DatagramPacket p1 = new DatagramPacket(buf, p.getLength(), p.getAddress(), p.getPort());
+                        udpServer.send(p1);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
